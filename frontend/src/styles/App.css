@@ -1,0 +1,22 @@
+/* App Layout */
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  padding-top: 80px; /* Account for fixed header */
+  padding-bottom: 2rem;
+}
+
+/* Festive page border (optional) */
+@media (min-width: 1200px) {
+  body {
+    border-left: 10px solid var(--red-primary);
+    border-right: 10px solid var(--green-primary);
+  }
+}
+

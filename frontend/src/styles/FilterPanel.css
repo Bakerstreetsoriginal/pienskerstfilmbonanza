@@ -1,0 +1,82 @@
+/* Filter Panel Styles */
+
+.filter-panel {
+  margin-bottom: 2rem;
+}
+
+.filter-toggle {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: var(--green-primary);
+  color: var(--text-light);
+  border: var(--border-width) solid var(--green-primary);
+  box-shadow: var(--shadow-retro);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.filter-toggle:hover {
+  background: var(--green-light);
+}
+
+.filter-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background: var(--white-snow);
+  border: var(--border-width) solid var(--text-dark);
+  border-top: none;
+}
+
+.filter-content.open {
+  max-height: 600px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-retro);
+}
+
+.filter-group {
+  margin-bottom: 1rem;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
+}
+
+.filter-group label {
+  display: block;
+  font-weight: bold;
+  color: var(--green-primary);
+  margin-bottom: 0.5rem;
+}
+
+.filter-group select,
+.filter-group input {
+  width: 100%;
+}
+
+.btn-reset {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* Mobile adjustments */
+@media (min-width: 768px) {
+  .filter-content.open {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .filter-group:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .btn-reset {
+    grid-column: 1 / -1;
+  }
+}
+

@@ -1,0 +1,47 @@
+/* Reviews Page Styles */
+
+.reviews-page {
+  min-height: 60vh;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem 0;
+}
+
+.page-header h1 {
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  color: var(--gray-medium);
+}
+
+.results-count {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--green-primary);
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--white-snow);
+  border: var(--border-width) solid var(--text-dark);
+  box-shadow: var(--shadow-retro);
+}
+
+.no-results h3 {
+  color: var(--red-primary);
+  margin-bottom: 1rem;
+}
+
+.no-results p {
+  color: var(--gray-medium);
+  font-size: 1.1rem;
+}
+

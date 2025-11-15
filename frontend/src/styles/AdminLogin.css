@@ -1,0 +1,58 @@
+/* Admin Login Page */
+
+.admin-login-page {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--red-primary), var(--green-primary));
+}
+
+.login-container {
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-card {
+  background: var(--white-snow);
+  border: 5px solid var(--gold);
+  padding: 3rem;
+  box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.login-card h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  font-size: 1.1rem;
+  color: var(--gray-medium);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  color: var(--green-primary);
+  margin-bottom: 0.5rem;
+}
+
+.login-footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--gray-light);
+}
+
+.login-footer a {
+  color: var(--green-primary);
+  font-weight: bold;
+}
+

@@ -58,4 +58,3 @@ async def root():
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "service": "kerstfilm-api"}
-

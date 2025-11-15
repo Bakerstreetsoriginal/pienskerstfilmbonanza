@@ -1,0 +1,113 @@
+/* Header & Navigation - 90's Style */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--red-primary);
+  background-image: linear-gradient(135deg, var(--red-primary) 25%, var(--red-dark) 25%, var(--red-dark) 50%, var(--red-primary) 50%, var(--red-primary) 75%, var(--red-dark) 75%, var(--red-dark));
+  background-size: 20px 20px;
+  border-bottom: 5px solid var(--gold);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 20px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-light);
+  text-decoration: none;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.nav a,
+.nav button {
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--text-light);
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--text-light);
+  border-radius: 0;
+  transition: all 0.2s;
+}
+
+.nav a:hover,
+.nav button:hover {
+  background: var(--gold);
+  color: var(--text-dark);
+  border-color: var(--text-dark);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.nav a.active {
+  background: var(--gold);
+  color: var(--text-dark);
+  border-color: var(--text-dark);
+}
+
+/* Footer */
+.footer {
+  background: var(--green-primary);
+  background-image: linear-gradient(135deg, var(--green-primary) 25%, var(--green-light) 25%, var(--green-light) 50%, var(--green-primary) 50%, var(--green-primary) 75%, var(--green-light) 75%, var(--green-light));
+  background-size: 20px 20px;
+  color: var(--text-light);
+  text-align: center;
+  padding: 2rem 0;
+  margin-top: auto;
+  border-top: 5px solid var(--gold);
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.footer p {
+  margin: 0;
+  font-size: 1rem;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Navigation */
+@media (max-width: 768px) {
+  .header .container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+  }
+
+  .nav a,
+  .nav button {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}
+

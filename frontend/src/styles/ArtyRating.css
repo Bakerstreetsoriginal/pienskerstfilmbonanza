@@ -1,0 +1,62 @@
+/* Arty Rating Component */
+
+.arty-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0.5rem 0;
+}
+
+.arty-icon {
+  cursor: default;
+  transition: transform 0.2s;
+}
+
+.arty-rating.interactive .arty-icon {
+  cursor: pointer;
+}
+
+.arty-rating.interactive .arty-icon:hover {
+  transform: scale(1.2);
+}
+
+.arty-icon.filled {
+  filter: grayscale(0);
+}
+
+.arty-icon.empty {
+  filter: grayscale(1);
+  opacity: 0.3;
+}
+
+/* Sizes */
+.arty-rating-small .arty-icon {
+  font-size: 1.2rem;
+}
+
+.arty-rating-small .rating-text {
+  font-size: 0.9rem;
+}
+
+.arty-rating-medium .arty-icon {
+  font-size: 1.5rem;
+}
+
+.arty-rating-medium .rating-text {
+  font-size: 1rem;
+}
+
+.arty-rating-large .arty-icon {
+  font-size: 2rem;
+}
+
+.arty-rating-large .rating-text {
+  font-size: 1.2rem;
+}
+
+.rating-text {
+  margin-left: 0.5rem;
+  font-weight: bold;
+  color: var(--red-primary);
+}
+
