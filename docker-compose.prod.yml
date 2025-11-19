@@ -17,6 +17,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 768M
+        reservations:
+          cpus: '0.25'
+          memory: 384M
 
   # FastAPI Backend
   backend:
@@ -63,6 +71,14 @@ services:
       
       # Service
       - "traefik.http.services.kerstfilms-api.loadbalancer.server.port=8000"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 768M
+        reservations:
+          cpus: '0.25'
+          memory: 384M
 
   # React Frontend (Production Build)
   frontend:
@@ -96,6 +112,14 @@ services:
       
       # Service
       - "traefik.http.services.kerstfilms-frontend.loadbalancer.server.port=80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
 
 volumes:
   postgres_data:

@@ -43,6 +43,7 @@
   text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.4);
   position: relative;
   z-index: 1;
+  color: var(--text-light);
 }
 
 .hero-subtitle {

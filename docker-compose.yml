@@ -18,6 +18,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   # FastAPI Backend
   backend:
@@ -43,6 +51,14 @@ services:
     volumes:
       - ./backend:/app
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   # React Frontend
   frontend:
@@ -61,6 +77,14 @@ services:
       - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
 
 volumes:
   postgres_data_dev:
