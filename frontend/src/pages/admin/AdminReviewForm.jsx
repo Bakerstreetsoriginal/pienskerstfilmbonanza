@@ -37,6 +37,21 @@ const AdminReviewForm = () => {
     }
   }, [id])
 
+  // Auto-search when user types (debounced)
+  useEffect(() => {
+    if (searchQuery.length < 3) {
+      setSearchResults([])
+      return
+    }
+
+    // Debounce: wait 500ms after last keystroke
+    const timeoutId = setTimeout(() => {
+      performSearch()
+    }, 500)
+
+    return () => clearTimeout(timeoutId)
+  }, [searchQuery])
+
   const loadGenres = async () => {
     try {
       const data = await adminService.getGenres()
@@ -69,9 +84,7 @@ const AdminReviewForm = () => {
     }
   }
 
-  const handleSearch = async (e) => {
-    e.preventDefault()
-    
+  const performSearch = async () => {
     if (!searchQuery.trim()) return
 
     setSearching(true)
@@ -80,10 +93,15 @@ const AdminReviewForm = () => {
       setSearchResults(results.results || [])
     } catch (err) {
       console.error('Error searching TMDB:', err)
-      alert('Fout bij zoeken naar films')
+      // Don't show alert for auto-search
     } finally {
       setSearching(false)
     }
+  }
+
+  const handleSearch = async (e) => {
+    e.preventDefault()
+    performSearch()
   }
 
   const handleSelectMovie = async (tmdbMovie) => {
@@ -174,22 +192,17 @@ const AdminReviewForm = () => {
           {!isEdit && !selectedMovie && (
             <div className="form-section">
               <h2>1. Zoek Film op TMDB</h2>
+              <p className="search-hint">💡 Type minimaal 3 letters, zoeken gebeurt automatisch</p>
               <div className="search-box">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Zoek naar een kerstfilm..."
+                  placeholder="Bijv. Love Actually, Home Alone..."
                   className="search-input"
+                  autoFocus
                 />
-                <button 
-                  type="button"
-                  onClick={handleSearch}
-                  className="btn btn-primary"
-                  disabled={searching}
-                >
-                  {searching ? 'Zoeken...' : '🔍 Zoeken'}
-                </button>
+                {searching && <span className="search-loading">🔍 Zoeken...</span>}
               </div>
 
               {searchResults.length > 0 && (
