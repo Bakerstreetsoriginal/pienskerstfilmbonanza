@@ -10,7 +10,7 @@ from app.schemas.review import ReviewWithMovie, ReviewListItem
 
 router = APIRouter()
 
-@router.get("/", response_model=List[ReviewListItem])
+@router.get("", response_model=List[ReviewListItem])
 async def get_movies(
     year: Optional[int] = Query(None, description="Filter by year"),
     rating: Optional[int] = Query(None, ge=1, le=10, description="Minimum Arty rating"),
