@@ -108,12 +108,19 @@ const AdminReviewForm = () => {
     try {
       // Create movie from TMDB data and get genre suggestions
       const response = await adminService.createMovieFromTMDB(tmdbMovie.tmdb_id)
+      console.log('🎬 Full response from backend:', response)
+      console.log('🎬 Movie:', response.movie)
+      console.log('🎬 Suggested genre IDs:', response.suggested_genre_ids)
+      console.log('🎬 Available genres:', genres)
+      
       setSelectedMovie(response.movie)
       
       // Auto-select suggested genres
       if (response.suggested_genre_ids && response.suggested_genre_ids.length > 0) {
+        console.log('✅ Setting genres to:', response.suggested_genre_ids)
         setSelectedGenres(response.suggested_genre_ids)
-        console.log('Auto-selected genres:', response.suggested_genre_ids)
+      } else {
+        console.warn('⚠️ No suggested genres received from backend')
       }
       
       setSearchResults([])
