@@ -10,6 +10,8 @@ export const movieService = {
     if (filters.genre) params.append('genre', filters.genre)
     if (filters.watched_month) params.append('watched_month', filters.watched_month)
     if (filters.search) params.append('search', filters.search)
+    if (filters.limit) params.append('limit', filters.limit)
+    if (filters.skip) params.append('skip', filters.skip)
     
     const response = await api.get(`${API_ENDPOINTS.MOVIES}?${params.toString()}`)
     return response.data

@@ -58,6 +58,10 @@ async def get_movies(
             )
         )
     
+    # Eager load relationships to avoid N+1 queries
+    from sqlalchemy.orm import joinedload
+    query = query.options(joinedload(Review.movie), joinedload(Review.genres))
+    
     # Get results
     reviews = query.order_by(Review.watched_date.desc()).offset(skip).limit(limit).all()
     

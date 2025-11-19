@@ -40,8 +40,9 @@ async def get_review_stats(db: Session = Depends(get_db)):
         func.count(Review.id).label('count')
     ).join(Genre.reviews).group_by(Genre.name).order_by(func.count(Review.id).desc()).all()
     
-    # Highest rated movie
-    highest_rated = db.query(Review).join(Movie).order_by(Review.arty_rating.desc()).first()
+    # Highest rated movie (with eager loading)
+    from sqlalchemy.orm import joinedload
+    highest_rated = db.query(Review).options(joinedload(Review.movie)).join(Movie).order_by(Review.arty_rating.desc()).first()
     
     return {
         "total_reviews": total_reviews,

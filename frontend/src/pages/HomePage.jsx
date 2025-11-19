@@ -16,11 +16,11 @@ const HomePage = () => {
   const loadData = async () => {
     try {
       const [reviews, statsData] = await Promise.all([
-        movieService.getMovies(),
+        movieService.getMovies({ limit: 3 }), // Only fetch 3 reviews
         movieService.getStats()
       ])
       
-      setRecentReviews(reviews.slice(0, 3))
+      setRecentReviews(reviews)
       setStats(statsData)
     } catch (error) {
       console.error('Error loading homepage data:', error)
