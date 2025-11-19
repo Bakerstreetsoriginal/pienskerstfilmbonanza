@@ -48,10 +48,12 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
-app.include_router(movies.router, prefix="/api/movies", tags=["Movies"])
-app.include_router(reviews.router, prefix="/api/reviews", tags=["Reviews"])
-app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
+# Note: When using Traefik with prefix stripping, remove /api from prefixes
+# Traefik receives /api/auth/login and forwards /auth/login to backend
+app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+app.include_router(movies.router, prefix="/movies", tags=["Movies"])
+app.include_router(reviews.router, prefix="/reviews", tags=["Reviews"])
+app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 
 @app.get("/")
 async def root():
