@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Date, DateTime, ForeignKey, Table
+from sqlalchemy import Column, Integer, String, Text, Date, DateTime, ForeignKey, Table, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.core.database import Base
@@ -20,7 +20,7 @@ class Review(Base):
     
     # Review content
     review_text = Column(Text, nullable=False)
-    arty_rating = Column(Integer, nullable=False)  # 1-10 Arty heads
+    arty_rating = Column(Float, nullable=False)  # X/10 rating (can be extreme: -1000 to 1000000)
     watched_date = Column(Date, nullable=False, index=True)
     
     # Metadata

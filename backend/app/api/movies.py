@@ -13,10 +13,11 @@ router = APIRouter()
 @router.get("", response_model=List[ReviewListItem])
 async def get_movies(
     year: Optional[int] = Query(None, description="Filter by year"),
-    rating: Optional[int] = Query(None, ge=1, le=10, description="Minimum Arty rating"),
+    rating: Optional[float] = Query(None, description="Minimum Arty rating"),
     genre: Optional[str] = Query(None, description="Filter by genre slug"),
     watched_month: Optional[str] = Query(None, description="Filter by watched month (YYYY-MM)"),
     search: Optional[str] = Query(None, description="Search by title"),
+    sort_by: Optional[str] = Query(None, description="Sort by: 'rating' or 'date'"),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
     db: Session = Depends(get_db)
@@ -62,12 +63,19 @@ async def get_movies(
     from sqlalchemy.orm import joinedload
     query = query.options(joinedload(Review.movie), joinedload(Review.genres))
     
-    # Get results
-    reviews = query.order_by(Review.watched_date.desc()).offset(skip).limit(limit).all()
+    # Sorting
+    if sort_by == "rating":
+        query = query.order_by(Review.arty_rating.desc())
+    else:
+        query = query.order_by(Review.watched_date.desc())
     
-    # Format response
+    # Get results
+    reviews = query.offset(skip).limit(limit).all()
+    
+    # Format response with ranking if sorted by rating
     result = []
-    for review in reviews:
+    for index, review in enumerate(reviews):
+        rank = (skip + index + 1) if sort_by == "rating" else None
         result.append(ReviewListItem(
             id=review.id,
             movie_title=review.movie.title,
@@ -76,7 +84,8 @@ async def get_movies(
             arty_rating=review.arty_rating,
             watched_date=review.watched_date,
             review_preview=review.review_text[:150] + "..." if len(review.review_text) > 150 else review.review_text,
-            genres=[g.name for g in review.genres]
+            genres=[g.name for g in review.genres],
+            rank=rank
         ))
     
     return result

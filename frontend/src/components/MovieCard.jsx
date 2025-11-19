@@ -10,6 +10,13 @@ const MovieCard = ({ review }) => {
 
   return (
     <Link to={`/reviews/${review.id}`} className="movie-card">
+      {review.rank && (
+        <div className="rank-badge">
+          <span className="rank-number">#{review.rank}</span>
+          {review.rank === 1 && <span className="rank-crown">👑</span>}
+        </div>
+      )}
+      
       <div className="movie-poster">
         {review.poster_url ? (
           <img src={review.poster_url} alt={review.movie_title} />

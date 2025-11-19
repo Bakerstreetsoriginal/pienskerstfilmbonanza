@@ -63,6 +63,44 @@
   50% { opacity: 0.5; }
 }
 
+/* Rating Input */
+.rating-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.rating-input {
+  flex: 1;
+  max-width: 200px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.rating-suffix {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--green-primary);
+}
+
+.rating-hint {
+  display: block;
+  color: var(--text-dark);
+  opacity: 0.8;
+  font-style: italic;
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.rating-preview {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--white-snow);
+  border: 2px dashed var(--gold);
+  border-radius: 8px;
+}
+
 /* Search Results */
 .search-results {
   margin-top: 1rem;

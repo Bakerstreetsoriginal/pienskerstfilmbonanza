@@ -7,21 +7,21 @@ from app.schemas.genre import GenreResponse
 class ReviewBase(BaseModel):
     """Base review schema"""
     review_text: str = Field(..., min_length=10)
-    arty_rating: int = Field(..., ge=1, le=10)
+    arty_rating: float = Field(..., ge=-1000, le=1000000, description="Rating out of 10 (can be extreme!)")
     watched_date: date
 
 class ReviewCreate(BaseModel):
     """Schema for creating a review"""
     movie_id: int
     review_text: str = Field(..., min_length=10)
-    arty_rating: int = Field(..., ge=1, le=10)
+    arty_rating: float = Field(..., ge=-1000, le=1000000, description="Rating out of 10 (can be extreme!)")
     watched_date: date
     genre_ids: List[int] = []
 
 class ReviewUpdate(BaseModel):
     """Schema for updating a review"""
     review_text: Optional[str] = Field(None, min_length=10)
-    arty_rating: Optional[int] = Field(None, ge=1, le=10)
+    arty_rating: Optional[float] = Field(None, ge=-1000, le=1000000, description="Rating out of 10 (can be extreme!)")
     watched_date: Optional[date] = None
     genre_ids: Optional[List[int]] = None
 
@@ -49,8 +49,9 @@ class ReviewListItem(BaseModel):
     movie_title: str
     movie_year: Optional[int]
     poster_url: Optional[str]
-    arty_rating: int
+    arty_rating: float
     watched_date: date
     review_preview: str  # First 150 chars
     genres: List[str] = []
+    rank: Optional[int] = None  # Rank when sorted by rating
 

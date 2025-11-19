@@ -110,6 +110,17 @@ const FilterPanel = ({ filters, onFilterChange }) => {
           />
         </div>
 
+        <div className="filter-group">
+          <label>Sorteer op</label>
+          <select 
+            value={filters.sort_by || ''} 
+            onChange={(e) => handleChange('sort_by', e.target.value)}
+          >
+            <option value="">Datum (nieuwste eerst)</option>
+            <option value="rating">⭐ Rating (hoogste eerst)</option>
+          </select>
+        </div>
+
         {activeFilterCount > 0 && (
           <button className="btn btn-reset" onClick={resetFilters}>
             ↺ Reset filters

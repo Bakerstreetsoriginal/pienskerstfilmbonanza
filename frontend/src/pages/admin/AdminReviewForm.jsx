@@ -280,13 +280,33 @@ const AdminReviewForm = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Arty Rating *</label>
-                  <ArtyRating 
-                    rating={artyRating}
-                    size="large"
-                    interactive={true}
-                    onChange={setArtyRating}
-                  />
+                  <label htmlFor="artyRating">Arty Rating * (X/10)</label>
+                  <div className="rating-input-wrapper">
+                    <input
+                      type="number"
+                      id="artyRating"
+                      value={artyRating}
+                      onChange={(e) => setArtyRating(parseFloat(e.target.value) || 0)}
+                      min="-1000"
+                      max="1000000"
+                      step="0.1"
+                      required
+                      placeholder="Geef een rating (bijv. 8.5, -500, 9999)"
+                      className="rating-input"
+                    />
+                    <span className="rating-suffix">/10</span>
+                  </div>
+                  <small className="rating-hint">
+                    💡 Tip: Gebruik extreme ratings voor ludieke effecten!<br />
+                    Normaal: 1-10 | Heel slecht: -1000 tot 0 | Meesterwerk: 100-1000000
+                  </small>
+                  <div className="rating-preview">
+                    <ArtyRating 
+                      rating={artyRating}
+                      size="medium"
+                      interactive={false}
+                    />
+                  </div>
                 </div>
 
                 <div className="form-group">
