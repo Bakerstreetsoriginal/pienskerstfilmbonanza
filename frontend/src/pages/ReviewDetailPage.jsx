@@ -92,6 +92,15 @@ const ReviewDetailPage = () => {
           </div>
         </div>
 
+        <div className="review-content">
+          <h2>✍️ Review door Pien</h2>
+          <div className="review-text">
+            {review.review_text.split('\n').map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
+          </div>
+        </div>
+
         {review.movie.plot && (
           <div className="movie-plot">
             <h2>📖 Plot</h2>
@@ -105,15 +114,6 @@ const ReviewDetailPage = () => {
             <p>{review.movie.cast}</p>
           </div>
         )}
-
-        <div className="review-content">
-          <h2>✍️ Review door Pien</h2>
-          <div className="review-text">
-            {review.review_text.split('\n').map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-          </div>
-        </div>
 
         {review.movie.backdrop_url && (
           <div className="review-backdrop">

@@ -106,9 +106,16 @@ const AdminReviewForm = () => {
 
   const handleSelectMovie = async (tmdbMovie) => {
     try {
-      // Create movie from TMDB data
-      const movie = await adminService.createMovieFromTMDB(tmdbMovie.tmdb_id)
-      setSelectedMovie(movie)
+      // Create movie from TMDB data and get genre suggestions
+      const response = await adminService.createMovieFromTMDB(tmdbMovie.tmdb_id)
+      setSelectedMovie(response.movie)
+      
+      // Auto-select suggested genres
+      if (response.suggested_genre_ids && response.suggested_genre_ids.length > 0) {
+        setSelectedGenres(response.suggested_genre_ids)
+        console.log('Auto-selected genres:', response.suggested_genre_ids)
+      }
+      
       setSearchResults([])
       setSearchQuery('')
     } catch (err) {

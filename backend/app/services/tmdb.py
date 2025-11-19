@@ -116,6 +116,9 @@ class TMDBService:
                 backdrop_path = data.get("backdrop_path")
                 backdrop_url = f"{self.image_base_url}{backdrop_path}" if backdrop_path else None
                 
+                # Get genre IDs
+                genre_ids = [g["id"] for g in data.get("genres", [])]
+                
                 return {
                     "tmdb_id": tmdb_id,
                     "title": data.get("title"),
@@ -126,6 +129,7 @@ class TMDBService:
                     "backdrop_url": backdrop_url,
                     "runtime": data.get("runtime"),
                     "director": director,
+                    "genre_ids": genre_ids,
                     "cast": cast_str
                 }
                 

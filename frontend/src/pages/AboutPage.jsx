@@ -48,18 +48,6 @@ const AboutPage = () => {
           </section>
 
           <section className="about-section">
-            <h2>💻 Over deze website</h2>
-            <p>
-              Deze website is gemaakt met liefde (en veel kerst-vibes) in een
-              hippe 90's stijl, compleet met vallende sneeuwvlokjes! ❄️
-            </p>
-            <p>
-              Tech stack voor de nerds: React, FastAPI, PostgreSQL, en een hoop
-              nostalgie voor de vroege internet tijden.
-            </p>
-          </section>
-
-          <section className="about-section">
             <h2>📬 Contact</h2>
             <p>
               Heb je vragen, suggesties, of wil je gewoon kerstfilm tips uitwisselen?

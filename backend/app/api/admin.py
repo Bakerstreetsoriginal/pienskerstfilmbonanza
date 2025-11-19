@@ -181,17 +181,23 @@ async def create_movie(
     
     return db_movie
 
-@router.post("/movies/from-tmdb/{tmdb_id}", response_model=MovieInDB)
+@router.post("/movies/from-tmdb/{tmdb_id}")
 async def create_movie_from_tmdb(
     tmdb_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Create a movie from TMDB data"""
+    """Create a movie from TMDB data and return suggested genres"""
     # Check if already exists
     existing = db.query(Movie).filter(Movie.tmdb_id == tmdb_id).first()
     if existing:
-        return existing
+        # Still get TMDB data for genre suggestions
+        tmdb_data = await tmdb_service.get_movie_details(tmdb_id)
+        suggested_genres = map_tmdb_genres_to_db(tmdb_data.get('genre_ids', []), db) if tmdb_data else []
+        return {
+            "movie": existing,
+            "suggested_genre_ids": suggested_genres
+        }
     
     # Get data from TMDB
     tmdb_data = await tmdb_service.get_movie_details(tmdb_id)
@@ -216,7 +222,35 @@ async def create_movie_from_tmdb(
     db.commit()
     db.refresh(db_movie)
     
-    return db_movie
+    # Map TMDB genres to our database genres
+    suggested_genres = map_tmdb_genres_to_db(tmdb_data.get('genre_ids', []), db)
+    
+    return {
+        "movie": db_movie,
+        "suggested_genre_ids": suggested_genres
+    }
+
+def map_tmdb_genres_to_db(tmdb_genre_ids: List[int], db: Session) -> List[int]:
+    """Map TMDB genre IDs to our database genre IDs"""
+    # TMDB Genre ID mapping
+    genre_mapping = {
+        35: "comedy",        # Comedy → Komedie
+        18: "drama",         # Drama → Drama
+        10751: "family",     # Family → Familie
+        10749: "romantic",   # Romance → Romantisch
+        16: "animation",     # Animation → Animatie
+        10402: "musical",    # Music → Musical
+    }
+    
+    db_genre_ids = []
+    for tmdb_id in tmdb_genre_ids:
+        slug = genre_mapping.get(tmdb_id)
+        if slug:
+            genre = db.query(Genre).filter(Genre.slug == slug).first()
+            if genre:
+                db_genre_ids.append(genre.id)
+    
+    return db_genre_ids
 
 @router.put("/movies/{movie_id}", response_model=MovieInDB)
 async def update_movie(
