@@ -41,7 +41,30 @@ services:
         condition: service_healthy
     networks:
       - kerstfilms_network
+      - traefik-net
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+    labels:
+      # Enable Traefik for backend API
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-net"
+      
+      # HTTP Router
+      - "traefik.http.routers.kerstfilms-api-http.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.kerstfilms-api-http.entrypoints=web"
+      - "traefik.http.routers.kerstfilms-api-http.middlewares=redirect-to-https"
+      
+      # HTTPS Router
+      - "traefik.http.routers.kerstfilms-api-https.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.kerstfilms-api-https.entrypoints=websecure"
+      - "traefik.http.routers.kerstfilms-api-https.tls=true"
+      - "traefik.http.routers.kerstfilms-api-https.tls.certresolver=le"
+      
+      # Strip prefix middleware
+      - "traefik.http.middlewares.kerstfilms-api-stripprefix.stripprefix.prefixes=/api"
+      - "traefik.http.routers.kerstfilms-api-https.middlewares=kerstfilms-api-stripprefix"
+      
+      # Service
+      - "traefik.http.services.kerstfilms-api.loadbalancer.server.port=8000"
 
   # React Frontend (Production Build)
   frontend:
@@ -56,24 +79,25 @@ services:
       - backend
     networks:
       - kerstfilms_network
-
-  # Nginx Reverse Proxy
-  nginx:
-    image: nginx:alpine
-    container_name: kerstfilms_nginx
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./certbot/conf:/etc/letsencrypt:ro
-      - ./certbot/www:/var/www/certbot:ro
-    depends_on:
-      - backend
-      - frontend
-    networks:
-      - kerstfilms_network
+      - traefik-net
+    labels:
+      # Enable Traefik for frontend
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-net"
+      
+      # HTTP Router
+      - "traefik.http.routers.kerstfilms-frontend-http.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.kerstfilms-frontend-http.entrypoints=web"
+      - "traefik.http.routers.kerstfilms-frontend-http.middlewares=redirect-to-https"
+      
+      # HTTPS Router
+      - "traefik.http.routers.kerstfilms-frontend-https.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.kerstfilms-frontend-https.entrypoints=websecure"
+      - "traefik.http.routers.kerstfilms-frontend-https.tls=true"
+      - "traefik.http.routers.kerstfilms-frontend-https.tls.certresolver=le"
+      
+      # Service
+      - "traefik.http.services.kerstfilms-frontend.loadbalancer.server.port=80"
 
 volumes:
   postgres_data:
@@ -81,4 +105,6 @@ volumes:
 networks:
   kerstfilms_network:
     driver: bridge
+  traefik-net:
+    external: true
 
