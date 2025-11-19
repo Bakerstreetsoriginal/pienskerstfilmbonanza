@@ -23,8 +23,8 @@ class TMDBService:
         
         async with httpx.AsyncClient() as client:
             try:
-                # Search with Christmas context
-                search_query = f"{query} christmas"
+                # Don't automatically add "christmas" - user can add it themselves if needed
+                search_query = query
                 
                 response = await client.get(
                     f"{self.base_url}/search/movie",
