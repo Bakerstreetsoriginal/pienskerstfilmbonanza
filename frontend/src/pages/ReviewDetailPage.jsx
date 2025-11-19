@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { movieService } from '../services/movieService'
 import ArtyRating from '../components/ArtyRating'
+import { textToSafeHTML } from '../utils/sanitize'
 import '../styles/ReviewDetailPage.css'
 
 const ReviewDetailPage = () => {
@@ -94,11 +95,12 @@ const ReviewDetailPage = () => {
 
         <div className="review-content">
           <h2>✍️ Review door Pien</h2>
-          <div className="review-text">
-            {review.review_text.split('\n').map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-          </div>
+          <div 
+            className="review-text"
+            dangerouslySetInnerHTML={{ 
+              __html: textToSafeHTML(review.review_text) 
+            }}
+          />
         </div>
 
         {review.movie.plot && (

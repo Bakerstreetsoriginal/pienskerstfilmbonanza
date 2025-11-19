@@ -37,7 +37,7 @@ const Layout = ({ children }) => {
 
       <footer className="footer">
         <div className="container">
-          <p>🎅 © 2024 Pien's Kerstfilm Bonanza • Made with ❤️ and ❄️</p>
+          <p>🎅 © 2025 Pien's Kerstfilm Bonanza by Dizzyman • Made with ❤️ and ❄️</p>
         </div>
       </footer>
     </div>

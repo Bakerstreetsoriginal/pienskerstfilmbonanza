@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 from typing import List
 from app.core.database import get_db
 from app.core.security import get_current_user
+from app.core.audit_log import log_admin_action
 from app.models.user import User
 from app.models.movie import Movie
 from app.models.review import Review
@@ -11,8 +12,11 @@ from app.schemas.movie import MovieCreate, MovieUpdate, MovieInDB, TMDBSearchRes
 from app.schemas.review import ReviewCreate, ReviewUpdate, ReviewWithMovie, ReviewResponse
 from app.schemas.genre import GenreCreate, GenreResponse
 from app.services.tmdb import TMDBService
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 # TMDB Service
 tmdb_service = TMDBService()
@@ -28,7 +32,9 @@ async def get_genres(db: Session = Depends(get_db)):
     return genres
 
 @router.post("/genres", response_model=GenreResponse)
+@limiter.limit("10/minute")
 async def create_genre(
+    request: Request,
     genre: GenreCreate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -50,7 +56,9 @@ async def create_genre(
 # ============================================================================
 
 @router.get("/search-tmdb", response_model=TMDBSearchResponse)
+@limiter.limit("30/minute")
 async def search_tmdb(
+    request: Request,
     query: str = Query(..., min_length=1),
     current_user: User = Depends(get_current_user)
 ):
@@ -83,7 +91,9 @@ async def get_all_reviews_admin(
     return reviews
 
 @router.post("/reviews", response_model=ReviewResponse)
+@limiter.limit("20/minute")
 async def create_review(
+    request: Request,
     review: ReviewCreate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -112,10 +122,21 @@ async def create_review(
     db.commit()
     db.refresh(db_review)
     
+    # Audit log
+    client_ip = request.client.host if request.client else None
+    log_admin_action(
+        "CREATE_REVIEW", 
+        current_user.email, 
+        f"movie_id={movie.id} title={movie.title}",
+        ip_address=client_ip
+    )
+    
     return db_review
 
 @router.put("/reviews/{review_id}", response_model=ReviewResponse)
+@limiter.limit("20/minute")
 async def update_review(
+    request: Request,
     review_id: int,
     review_update: ReviewUpdate,
     current_user: User = Depends(get_current_user),
@@ -139,10 +160,21 @@ async def update_review(
     db.commit()
     db.refresh(db_review)
     
+    # Audit log
+    client_ip = request.client.host if request.client else None
+    log_admin_action(
+        "UPDATE_REVIEW", 
+        current_user.email, 
+        f"review_id={review_id}",
+        ip_address=client_ip
+    )
+    
     return db_review
 
 @router.delete("/reviews/{review_id}")
+@limiter.limit("10/minute")
 async def delete_review(
+    request: Request,
     review_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -155,6 +187,15 @@ async def delete_review(
     db.delete(db_review)
     db.commit()
     
+    # Audit log
+    client_ip = request.client.host if request.client else None
+    log_admin_action(
+        "DELETE_REVIEW", 
+        current_user.email, 
+        f"review_id={review_id}",
+        ip_address=client_ip
+    )
+    
     return {"message": "Review deleted successfully"}
 
 # ============================================================================
@@ -162,7 +203,9 @@ async def delete_review(
 # ============================================================================
 
 @router.post("/movies", response_model=MovieInDB)
+@limiter.limit("20/minute")
 async def create_movie(
+    request: Request,
     movie: MovieCreate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -182,7 +225,9 @@ async def create_movie(
     return db_movie
 
 @router.post("/movies/from-tmdb/{tmdb_id}")
+@limiter.limit("20/minute")
 async def create_movie_from_tmdb(
+    request: Request,
     tmdb_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -253,7 +298,9 @@ def map_tmdb_genres_to_db(tmdb_genre_ids: List[int], db: Session) -> List[int]:
     return db_genre_ids
 
 @router.put("/movies/{movie_id}", response_model=MovieInDB)
+@limiter.limit("20/minute")
 async def update_movie(
+    request: Request,
     movie_id: int,
     movie_update: MovieUpdate,
     current_user: User = Depends(get_current_user),

@@ -283,13 +283,33 @@ const AdminReviewForm = () => {
                   <label htmlFor="artyRating">Arty Rating * (X/10)</label>
                   <div className="rating-input-wrapper">
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="decimal"
                       id="artyRating"
                       value={artyRating}
-                      onChange={(e) => setArtyRating(parseFloat(e.target.value) || 0)}
-                      min="-1000"
-                      max="1000000"
-                      step="0.1"
+                      onChange={(e) => {
+                        const value = e.target.value
+                        // Allow typing minus sign and decimals
+                        if (value === '' || value === '-' || value === '.' || value === '-.') {
+                          setArtyRating(value)
+                          return
+                        }
+                        const num = parseFloat(value)
+                        if (!isNaN(num) && num >= -1000 && num <= 1000000) {
+                          setArtyRating(num)
+                        } else if (num < -1000) {
+                          setArtyRating(-1000)
+                        } else if (num > 1000000) {
+                          setArtyRating(1000000)
+                        }
+                      }}
+                      onBlur={() => {
+                        // Clean up on blur
+                        const num = parseFloat(artyRating)
+                        if (isNaN(num) || artyRating === '' || artyRating === '-') {
+                          setArtyRating(5) // Default to 5
+                        }
+                      }}
                       required
                       placeholder="Geef een rating (bijv. 8.5, -500, 9999)"
                       className="rating-input"
@@ -302,7 +322,7 @@ const AdminReviewForm = () => {
                   </small>
                   <div className="rating-preview">
                     <ArtyRating 
-                      rating={artyRating}
+                      rating={typeof artyRating === 'number' ? artyRating : 5}
                       size="medium"
                       interactive={false}
                     />
