@@ -41,7 +41,7 @@ const HomePage = () => {
             🎄 Welkom bij Pien's Kerstfilm Bonanza! ❄️
           </h1>
           <p className="hero-subtitle">
-            De meest hippe 90's-stijl website voor kerstfilm reviews!
+            Pien's exclusief kerstfilm review compendium!
             <br />
             Met exclusieve Arty-ratings! 🐱
           </p>
