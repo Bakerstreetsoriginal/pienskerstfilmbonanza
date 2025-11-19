@@ -1,10 +1,17 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator
 from typing import List, Union
 import os
 
 class Settings(BaseSettings):
     """Application settings"""
+    
+    # Pydantic v2 config
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        extra='ignore'
+    )
     
     # Database
     DATABASE_URL: str = "postgresql://pienskerst:password@localhost:5432/kerstfilms"
@@ -23,8 +30,8 @@ class Settings(BaseSettings):
     ADMIN_EMAIL: str = "admin@kerstfilms.nl"
     ADMIN_PASSWORD: str = "changeme"
     
-    # CORS - defined as string in env, converted to list by validator
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173"]
+    # CORS - defined as Union to prevent auto JSON parsing
+    CORS_ORIGINS: Union[str, List[str]] = "http://localhost:3000,http://localhost:5173"
     
     @field_validator('CORS_ORIGINS', mode='before')
     @classmethod
@@ -35,10 +42,6 @@ class Settings(BaseSettings):
         elif isinstance(v, list):
             return v
         return []
-    
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
 
 settings = Settings()
 

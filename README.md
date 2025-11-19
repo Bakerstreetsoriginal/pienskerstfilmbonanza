@@ -14,19 +14,33 @@ Een hippe 90's-stijl website voor kerstfilm reviews met vallende sneeuwvlokjes e
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React + Vite
-- **Backend**: Python + FastAPI
-- **Database**: PostgreSQL
-- **Deployment**: Docker Compose
+- **Frontend**: React 18.3 + Vite 6.0
+- **Backend**: Python 3.13 + FastAPI 0.115
+- **Database**: PostgreSQL 17
+- **Deployment**: Docker Compose + Traefik
 - **API**: TMDB (The Movie Database)
+
+### Key Dependencies (Updated November 2025)
+
+**Frontend:**
+- React 18.3.1 + React Router 6.28
+- Vite 6.0.1
+- Axios 1.7.7
+- ESLint 9.14 (Flat Config)
+
+**Backend:**
+- FastAPI 0.115.5
+- SQLAlchemy 2.0.36
+- Pydantic 2.10.2
+- Uvicorn 0.32.1
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - Docker & Docker Compose
-- Node.js 18+ (voor lokale development)
-- Python 3.11+ (voor lokale development)
+- Node.js 22+ (voor lokale development)
+- Python 3.13+ (voor lokale development)
 
 ### Development Setup
 

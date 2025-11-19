@@ -33,6 +33,10 @@ out/
 .env.local
 .env.production
 .env.*.local
+.env.dev
+.env.stg
+.env.prod
+*.env.backup
 
 # IDEs
 .vscode/

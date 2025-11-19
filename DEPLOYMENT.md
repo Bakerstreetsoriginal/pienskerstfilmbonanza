@@ -5,9 +5,14 @@ Complete deployment guide voor je VPS.
 ## 📋 Prerequisites
 
 - VPS met Ubuntu 20.04+ (of Debian)
-- Domain naam (optioneel maar aanbevolen)
+- Domain naam (voor Traefik/HTTPS)
 - SSH toegang tot je server
 - Minimaal 2GB RAM aanbevolen
+- Optioneel: Traefik reverse proxy (v2.10+)
+
+**Tech Stack (November 2025):**
+- Docker 24+, Docker Compose v2
+- Node 22, Python 3.13, PostgreSQL 17
 
 ## 1️⃣ Server Setup
 
@@ -114,19 +119,50 @@ Dit script doet:
 - Run database migrations
 - Seed initial genres
 
-## 6️⃣ SSL/HTTPS Setup (Optioneel maar aanbevolen)
+## 6️⃣ Deployment Opties
 
-### Installeer Certbot
+### Optie A: Traefik Integration (Aanbevolen voor v1.1+)
+
+Als je al Traefik draait als reverse proxy:
+
+**1. Update .env voor Traefik:**
+```env
+DOMAIN=pienskerstfilmbonanza.nl
+CORS_ORIGINS=https://pienskerstfilmbonanza.nl
+VITE_API_URL=https://pienskerstfilmbonanza.nl/api
+```
+
+**2. Deploy met Production Compose:**
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+**3. Traefik Features:**
+- ✅ Automatische HTTPS via Let's Encrypt
+- ✅ HTTP → HTTPS redirect
+- ✅ API routing op `/api` met prefix stripping
+- ✅ Frontend op root domain
+
+**Traefik vereisten:**
+- Network: `traefik-net` (external)
+- Entrypoints: `web` (80), `websecure` (443)
+- Cert resolver: `le` (Let's Encrypt)
+
+### Optie B: Standalone met Certbot
+
+Als je geen Traefik gebruikt:
+
+**1. Installeer Certbot:**
 ```bash
 sudo apt install certbot python3-certbot-nginx -y
 ```
 
-### Verkrijg SSL certificaat
+**2. Verkrijg SSL certificaat:**
 ```bash
 sudo certbot certonly --standalone -d jouwdomain.nl
 ```
 
-### Update nginx configuratie
+**3. Update nginx configuratie:**
 Bewerk `nginx/nginx.conf` om SSL te ondersteunen:
 
 ```nginx

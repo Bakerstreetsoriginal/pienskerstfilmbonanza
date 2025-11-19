@@ -9,6 +9,10 @@ Zorg dat je hebt:
 - [x] Docker & Docker Compose geïnstalleerd
 - [x] TMDB API key (gratis op https://www.themoviedb.org/settings/api)
 
+**Tech Stack (November 2025):**
+- Node 22, Python 3.13, PostgreSQL 17
+- React 18.3, FastAPI 0.115, Vite 6.0
+
 ### 2. Setup Environment
 
 Maak `.env` file aan (Windows PowerShell):

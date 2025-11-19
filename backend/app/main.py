@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
@@ -9,11 +10,32 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Create FastAPI app
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup and shutdown events"""
+    # Startup
+    logger.info("Starting up Kerstfilm Bonanza API...")
+    
+    # Create tables (in production, use Alembic migrations instead)
+    Base.metadata.create_all(bind=engine)
+    
+    # Create admin user if not exists
+    from app.core.init_db import init_db
+    init_db()
+    
+    logger.info("✓ Startup complete!")
+    
+    yield
+    
+    # Shutdown (cleanup if needed)
+    logger.info("Shutting down...")
+
+# Create FastAPI app with lifespan
 app = FastAPI(
     title="Pien's Kerstfilm Bonanza API",
     description="API voor kerstfilm reviews met Arty ratings! 🎄❄️",
     version="1.0.0",
+    lifespan=lifespan
 )
 
 # Configure CORS
@@ -30,20 +52,6 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(movies.router, prefix="/api/movies", tags=["Movies"])
 app.include_router(reviews.router, prefix="/api/reviews", tags=["Reviews"])
 app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
-
-@app.on_event("startup")
-async def startup_event():
-    """Create database tables and seed admin user"""
-    logger.info("Starting up Kerstfilm Bonanza API...")
-    
-    # Create tables (in production, use Alembic migrations instead)
-    Base.metadata.create_all(bind=engine)
-    
-    # Create admin user if not exists
-    from app.core.init_db import init_db
-    init_db()
-    
-    logger.info("✓ Startup complete!")
 
 @app.get("/")
 async def root():
