@@ -35,10 +35,18 @@ export const AuthProvider = ({ children }) => {
   }, [token])
 
   const login = async (email, password) => {
-    const { access_token, user: userData } = await authService.login(email, password)
+    const { access_token } = await authService.login(email, password)
     setToken(access_token)
     localStorage.setItem('token', access_token)
-    setUser(userData)
+    
+    // Fetch user data separately after login
+    try {
+      const userData = await authService.getCurrentUser()
+      setUser(userData)
+    } catch (error) {
+      console.error('Failed to fetch user data:', error)
+      // Token is set, user data will be fetched by useEffect
+    }
   }
 
   const logout = () => {
